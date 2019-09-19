@@ -113,17 +113,9 @@ void setup() {
 
   sky_font = loadFont("AppleColorEmoji-48.vlw");
   
-  pdf_font = createFont("Helvetica",14);
+  pdf_font = createFont("Courier", 8);
   textFont(pdf_font);
-  c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-  
-  year = c.get(Calendar.YEAR);
-  month = c.get(Calendar.MONTH) + 1;
-  day = c.get(Calendar.DAY_OF_MONTH);
-  hour = c.get(Calendar.HOUR_OF_DAY);
-  minute = c.get(Calendar.MINUTE);
-  second = c.get(Calendar.SECOND);
-  
+
   println("Section length is " + section.length);
 }
 
@@ -202,9 +194,9 @@ void draw() {
     // Run the python code HERE
 
     // Loads in a poem from the text file
-    if(loadStrings("http://esems.pythonanywhere.com/poem2") != null){
-      if ((loadStrings("http://esems.pythonanywhere.com/poem2").length) > 0) {
-        result = loadStrings("http://esems.pythonanywhere.com/poem2");
+    if(loadStrings("http://esems.pythonanywhere.com/poem1") != null){
+      if ((loadStrings("http://esems.pythonanywhere.com/poem1").length) > 0) {
+        result = loadStrings("http://esems.pythonanywhere.com/poem1");
         println("Loaded result");
         //go through each loaded line and check if there are any special chars to replace
         for(p = 0; p < 3; p++){
@@ -239,10 +231,10 @@ void draw() {
     // If there is a file, loads in a poem from the text file. Otherwise, states that the file does not exist.
     printArray(new_result);
 
-    if(loadStrings("http://esems.pythonanywhere.com/poem2") != null){
-      if ((loadStrings("http://esems.pythonanywhere.com/poem2").length) > 0) {
-        println(loadStrings("http://esems.pythonanywhere.com/poem2").length);
-        new_result = loadStrings("http://esems.pythonanywhere.com/poem2");
+    if(loadStrings("http://esems.pythonanywhere.com/poem1") != null){
+      if ((loadStrings("http://esems.pythonanywhere.com/poem1").length) > 0) {
+        println(loadStrings("http://esems.pythonanywhere.com/poem1").length);
+        new_result = loadStrings("http://esems.pythonanywhere.com/poem1");
         println("Loaded new result");
         //go through each loaded line and check if there are any special chars to replace
         if(new_result.length > 0){
@@ -282,8 +274,10 @@ void draw() {
         println("y is", yrand);
         textFont(sky_font);
         noStroke();
-        fill(0, 255, 0);
+        //blendMode(ADD);
+        fill(255, 255, 255, 40);
         text(result[0] + " / " + result[1] + " / " + result[2], x, yrand);
+        //blendMode(BLEND);
         x = x-1;
       } else {
   
@@ -305,16 +299,16 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   img.beginDraw();
   img.noFill();
    
-  if(counter % 8 == 0 && counter != 0){
+  if(counter % 4 == 0 && counter != 0){
     println("---Counter in the function is ", counter);
     if(pastFrame != whichFrame && randFrame == whichFrame){
       drawPDF = true;
-      //printImage("/Users/suehuang/Documents/Processing/skycam_v4/cloudprints/output" + num + ".pdf");
+      printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/output" + num + ".pdf");
       println("---pastFrame in the function is ", pastFrame);
       println("---whichFrame in the function is ", whichFrame);
       println("---randFrame in the function is ", randFrame);
       pastFrame = whichFrame;
-      if(counter > 8){
+      if(counter > 4){
         num++;
       }
     }
@@ -340,35 +334,45 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           println("---Drawing the cloud...", num);
           pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
           
+          //get the calendar info
+          c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+          year = c.get(Calendar.YEAR);
+          month = c.get(Calendar.MONTH) + 1;
+          day = c.get(Calendar.DAY_OF_MONTH);
+          hour = c.get(Calendar.HOUR_OF_DAY);
+          minute = c.get(Calendar.MINUTE);
+          second = c.get(Calendar.SECOND);
+          
           pdf.beginDraw();
           
           //text on PDF
           pdf.fill(0);
+          
+          /*
           pdf.pushMatrix();
-          pdf.translate(20, 580);
+          pdf.translate(20, 590);
           pdf.rotate(-HALF_PI);
+          pdf.textSize(8);
           pdf.text(city_name.toUpperCase() + ", " + nf(month, 2) + "/" + nf(day, 2) + "/" + year + ", " + nf(hour, 2) + ":" + nf(minute, 2) + ":" + nf(second, 2) + " UTC", 0, 0);
-          
-          //pdf.text(city_name.toUpperCase() + ", " + nf(month, 2) + "/" + nf(day, 2) + "/" + year + ", " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) + " UTC", 0, 0);
           pdf.popMatrix();
- 
+          */
           
           pdf.pushMatrix();
-          pdf.translate(20, 200);
+          pdf.translate(1004, 130);
           pdf.rotate(-HALF_PI);
+          pdf.textSize(8);
           pdf.text(city_no + nf(month, 2) +nf(day, 2) + nf(year) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-HUANG", 0, 0);
           pdf.popMatrix();
           
           
           pdf.noFill();
-          pdf.strokeWeight(1);
+          pdf.strokeWeight(.5);
           pdf.stroke(0, 0, 0);
         }
         // Edges
         if (drawEdges){
-          img.strokeWeight(1);
-          img.stroke(0, 255, 0);
-
+          img.strokeWeight(.01);
+          img.stroke(255, 255, 255, 40);
           for (int m=0;m<b.getEdgeNb();m++){
             eA = b.getEdgeVertexA(m);
             edges[0] = eA;
