@@ -1,4 +1,4 @@
-// This one works! need to adjust counter to extend time
+// This is a final version of the file
 
 // libraries for detecting blobs and printing them out
 import blobDetection.*;
@@ -7,8 +7,8 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 // stuff for loading in the sky images
-int city_no = 578;
-String city_name = "Trondheim, Norway";
+int city_no = 409;
+String city_name = "Winter Haven, Florida";
 int trail = 6;
 int image_num = 0;
 String[] imageNames = new String[6];
@@ -26,8 +26,8 @@ Calendar c;
 
 // section variables and multiplier
 float m = 3.4;
-int sectionx = 300;
-int sectiony = 200;
+int sectionx = 150;
+int sectiony = 160;
 
 // general counting
 int num = 0;
@@ -367,7 +367,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
         // Edges
         if (drawEdges){
           img.strokeWeight(1);
-          img.stroke(0, 0, 0);
+          img.stroke(0, 255, 0);
 
           for (int m=0;m<b.getEdgeNb();m++){
             eA = b.getEdgeVertexA(m);
