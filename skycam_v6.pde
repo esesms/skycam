@@ -108,8 +108,8 @@ void setup() {
   //pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
   
   // Screen size
-  size(1024, 600);
-  //fullScreen();
+  //size(1024, 600);
+  fullScreen(1);
 
   sky_font = loadFont("AppleColorEmoji-48.vlw");
   
@@ -373,6 +373,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
         if (drawEdges){
           img.strokeWeight(.01);
           img.stroke(255, 255, 255, 40);
+          //img.noStroke();
           for (int m=0;m<b.getEdgeNb();m++){
             eA = b.getEdgeVertexA(m);
             edges[0] = eA;
