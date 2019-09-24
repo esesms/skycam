@@ -275,7 +275,7 @@ void draw() {
         textFont(sky_font);
         noStroke();
         //blendMode(ADD);
-        fill(255, 255, 255, 40);
+        fill(0, 255, 0, 170);
         text(result[0] + " / " + result[1] + " / " + result[2], x, yrand);
         //blendMode(BLEND);
         x = x-1;
@@ -299,7 +299,8 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   img.beginDraw();
   img.noFill();
    
-  if(counter % 4 == 0 && counter != 0){
+  //10 count in 1 minute? 120 count is approximately 1.5 hours
+  if(counter % 120 == 0 && counter != 0){
     println("---Counter in the function is ", counter);
     if(pastFrame != whichFrame && randFrame == whichFrame){
       drawPDF = true;
@@ -308,7 +309,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
       println("---whichFrame in the function is ", whichFrame);
       println("---randFrame in the function is ", randFrame);
       pastFrame = whichFrame;
-      if(counter > 4){
+      if(counter > 120){
         num++;
       }
     }
@@ -366,14 +367,17 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           
           
           pdf.noFill();
-          pdf.strokeWeight(.5);
+          pdf.strokeWeight(1);
           pdf.stroke(0, 0, 0);
         }
         // Edges
         if (drawEdges){
-          img.strokeWeight(.01);
-          img.stroke(255, 255, 255, 40);
-          //img.noStroke();
+          if(counter % 120 == 0){
+            img.strokeWeight(.01);
+            img.stroke(255, 255, 255, 10);
+          }else{
+            img.noStroke();
+          }
           for (int m=0;m<b.getEdgeNb();m++){
             eA = b.getEdgeVertexA(m);
             edges[0] = eA;
