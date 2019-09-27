@@ -7,8 +7,8 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 // stuff for loading in the sky images
-int city_no = 409;
-String city_name = "Winter Haven, Florida";
+int city_no = 578;
+String city_name = "Trondheim, Norway";
 int trail = 6;
 int image_num = 0;
 String[] imageNames = new String[6];
@@ -26,7 +26,7 @@ Calendar c;
 
 // section variables and multiplier
 float m = 3.4;
-int sectionx = 150;
+int sectionx = 170;
 int sectiony = 160;
 
 // general counting
@@ -52,8 +52,8 @@ boolean ln1_compare, ln2_compare, ln3_compare;
 // for text
 float txt_width;
 PFont sky_font;
-String[] html_code = {"&#39;"};
-String[] plain_txt = {"'"};
+String[] html_code = {"&#39;", "&amp;"};
+String[] plain_txt = {"'", "&"};
 PFont pdf_font;
 
 // blob draw and print to pdf variables
@@ -153,7 +153,9 @@ void draw() {
    
     //resizes the image
     //frames[whichFrame].resize(round(768*2.5), round(576*2.5));
+    
     section[whichFrame].resize(1024, 600);
+    //section[whichFrame].resize(4000, 3000);
     
     //draws the image
     image(section[whichFrame], 0, 0);
@@ -300,16 +302,18 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   img.noFill();
    
   //10 count in 1 minute? 120 count is approximately 1.5 hours
-  if(counter % 120 == 0 && counter != 0){
+  if(counter % 2 == 0 && counter != 0){
     println("---Counter in the function is ", counter);
     if(pastFrame != whichFrame && randFrame == whichFrame){
       drawPDF = true;
-      printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/output" + num + ".pdf");
+      println("---" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
+      printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
+      //printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
       println("---pastFrame in the function is ", pastFrame);
       println("---whichFrame in the function is ", whichFrame);
       println("---randFrame in the function is ", randFrame);
       pastFrame = whichFrame;
-      if(counter > 120){
+      if(counter > 2){
         num++;
       }
     }
@@ -332,8 +336,6 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
         println("There is a big blob");
         // if the blob is bigger than 100 width than, create a pdf to capture it
         if(drawPDF == true){
-          println("---Drawing the cloud...", num);
-          pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
           
           //get the calendar info
           c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -344,25 +346,21 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           minute = c.get(Calendar.MINUTE);
           second = c.get(Calendar.SECOND);
           
+          println("---Drawing the cloud...");
+          pdf = createGraphics(1024, 600, PDF, "cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
+          
+ 
+          
           pdf.beginDraw();
           
           //text on PDF
           pdf.fill(0);
           
-          /*
           pdf.pushMatrix();
-          pdf.translate(20, 590);
+          pdf.translate(1004, 140);
           pdf.rotate(-HALF_PI);
           pdf.textSize(8);
-          pdf.text(city_name.toUpperCase() + ", " + nf(month, 2) + "/" + nf(day, 2) + "/" + year + ", " + nf(hour, 2) + ":" + nf(minute, 2) + ":" + nf(second, 2) + " UTC", 0, 0);
-          pdf.popMatrix();
-          */
-          
-          pdf.pushMatrix();
-          pdf.translate(1004, 130);
-          pdf.rotate(-HALF_PI);
-          pdf.textSize(8);
-          pdf.text(city_no + nf(month, 2) +nf(day, 2) + nf(year) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-HUANG", 0, 0);
+          pdf.text(city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG", 0, 0);
           pdf.popMatrix();
           
           
@@ -372,7 +370,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
         }
         // Edges
         if (drawEdges){
-          if(counter % 120 == 0){
+          if(counter % 60 == 0){
             img.strokeWeight(.01);
             img.stroke(255, 255, 255, 10);
           }else{
@@ -411,8 +409,10 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
            );   
         }
         if(drawPDF == true) {
+          
           pdf.dispose();
           pdf.endDraw();
+          
         }
       }
     }
