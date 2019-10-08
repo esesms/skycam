@@ -145,6 +145,12 @@ void draw() {
         println(imageNames[i]);
         if(loadImage(imageNames[i]) != null){
           frames[i] = loadImage(imageNames[i]);
+          if(frames[i] != null){
+            section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
+          }
+        }else{
+          // in case it is unable to load in an image from online, load one from folder
+          frames[i] = loadImage("assets/latest_full.jpg");
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
         }
       }else{
@@ -153,7 +159,12 @@ void draw() {
         println(imageNames[i]);
         if(loadImage(imageNames[i]) != null){
           frames[i] = loadImage(imageNames[i]);
-          section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image
+          if(frames[i] != null){
+            section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image
+          }
+        }else{
+          frames[i] = loadImage("assets/latest_full" + str(image_num) + ".jpg");
+          section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
         }
       }
     }
