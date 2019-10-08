@@ -5,10 +5,12 @@ import blobDetection.*;
 import processing.pdf.*;
 import java.util.Calendar;
 import java.util.TimeZone;
+//import com.hamoid.*;
+//VideoExport videoExport;
 
 // stuff for loading in the sky images
-int city_no = 578;
-String city_name = "Trondheim, Norway";
+int city_no = 435;
+String city_name = "New Mexico";
 int trail = 6;
 int image_num = 0;
 String[] imageNames = new String[6];
@@ -26,8 +28,8 @@ Calendar c;
 
 // section variables and multiplier
 float m = 3.4;
-int sectionx = 170;
-int sectiony = 160;
+int sectionx = 180;
+int sectiony = 180;
 
 // general counting
 int num = 0;
@@ -110,10 +112,16 @@ void setup() {
   // Screen size
   //size(1024, 600);
   fullScreen(1);
-
-  sky_font = loadFont("AppleColorEmoji-48.vlw");
   
-  pdf_font = createFont("Courier", 8);
+  // code to export a video
+  /*
+  videoExport = new VideoExport(this);
+  videoExport.startMovie();
+  */
+
+  sky_font = loadFont("Monaco-48.vlw");
+  
+  pdf_font = createFont("Futura", 8);
   textFont(pdf_font);
 
   println("Section length is " + section.length);
@@ -292,7 +300,8 @@ void draw() {
       }
     }
   }
-
+//code to export video
+//videoExport.saveFrame();
 }
 
 EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
@@ -302,18 +311,17 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   img.noFill();
    
   //10 count in 1 minute? 120 count is approximately 1.5 hours
-  if(counter % 2 == 0 && counter != 0){
+  if(counter % 30 == 0 && counter != 0){
     println("---Counter in the function is ", counter);
     if(pastFrame != whichFrame && randFrame == whichFrame){
       drawPDF = true;
       println("---" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
       printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
-      //printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
       println("---pastFrame in the function is ", pastFrame);
       println("---whichFrame in the function is ", whichFrame);
       println("---randFrame in the function is ", randFrame);
       pastFrame = whichFrame;
-      if(counter > 2){
+      if(counter > 30){
         num++;
       }
     }
@@ -346,6 +354,8 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           minute = c.get(Calendar.MINUTE);
           second = c.get(Calendar.SECOND);
           
+          textFont(pdf_font);
+          
           println("---Drawing the cloud...");
           pdf = createGraphics(1024, 600, PDF, "cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
           
@@ -357,10 +367,14 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           pdf.fill(0);
           
           pdf.pushMatrix();
-          pdf.translate(1004, 140);
+          //vertical text
+          /*
+          pdf.translate(974, 300);
           pdf.rotate(-HALF_PI);
-          pdf.textSize(8);
-          pdf.text(city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG", 0, 0);
+          */
+          pdf.translate(799, 570);
+          pdf.textSize(6);
+          pdf.text("IN_THE_TIME_OF_CLOUDS-" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG", 0, 0);
           pdf.popMatrix();
           
           
@@ -370,7 +384,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
         }
         // Edges
         if (drawEdges){
-          if(counter % 60 == 0){
+          if(counter % 10 == 0){
             img.strokeWeight(.01);
             img.stroke(255, 255, 255, 10);
           }else{
@@ -469,4 +483,12 @@ void keyPressed(){
   }
   println("---Key code is", keyCode); 
   println("---Blob threshold changed to", nf(blobThreshold, 1, 1)); 
+  
+  // code to export video
+  /*
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
+  }
+  */
 }
