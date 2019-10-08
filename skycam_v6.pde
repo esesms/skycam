@@ -8,8 +8,16 @@ import java.util.TimeZone;
 //import com.hamoid.*;
 //VideoExport videoExport;
 
-// stuff for loading in the sky images
+//variable inputs
 int city_no = 435;
+int printCount = 2; // One print per hour
+int screenDrawCount = 100; // One screen draw every 10 minutes
+int poemNumber = 1;
+String folderLocation = "skycam_v6";
+int monitorNumber = 1;
+Boolean printImageToggle = true;
+
+// stuff for loading in the sky images
 String city_name = "New Mexico";
 int trail = 6;
 int image_num = 0;
@@ -56,7 +64,7 @@ float txt_width;
 PFont sky_font;
 String[] html_code = {"&#39;", "&amp;"};
 String[] plain_txt = {"'", "&"};
-PFont pdf_font;
+//PFont pdf_font;
 
 // blob draw and print to pdf variables
 BlobDetection theBlobDetection;
@@ -71,12 +79,9 @@ int j = 0;
 int p = 0;
 int q = 0;
 
-//EdgeVertex past_eA, past_eB;
-
 void setup() {
-    // Load image from a web server
-
-  for (i = 0; i < trail; i=i+1) {
+  // Load image from a web server
+  for (i = 0; i < trail; i = i+1) {
     if (i == 0) {
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
       println(imageNames[i]);
@@ -90,7 +95,7 @@ void setup() {
         frames[i] = loadImage("assets/latest_full.jpg");
         section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
       }
-    }else {
+    }else{
       image_num = i + 1;
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full"+ str(image_num) + ".jpg";
       println(imageNames[i]);
@@ -111,7 +116,7 @@ void setup() {
   
   // Screen size
   //size(1024, 600);
-  fullScreen(1);
+  fullScreen(monitorNumber);
   
   // code to export a video
   /*
@@ -119,10 +124,12 @@ void setup() {
   videoExport.startMovie();
   */
 
-  sky_font = loadFont("Monaco-48.vlw");
+  sky_font = loadFont("AndaleMono-64.vlw");
   
-  pdf_font = createFont("Futura", 8);
-  textFont(pdf_font);
+  //pdf_font = loadFont("AndaleMono-6.vlw");
+  
+  //pdf_font = createFont("Futura", 8);
+  //textFont(pdf_font);
 
   println("Section length is " + section.length);
 }
@@ -132,7 +139,7 @@ void draw() {
   
   // refreshes images in 2 second segment every 1 minutes
   if((millis())%60000 > 59000 || (millis())%60000 < 1000){
-    for (i = 0; i < trail; i=i+1) {
+    for (i = 0; i < trail; i = i+1) {
       if (i == 0) {
         imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
         println(imageNames[i]);
@@ -140,7 +147,7 @@ void draw() {
           frames[i] = loadImage(imageNames[i]);
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
         }
-    } else {
+      }else{
         image_num = i + 1;
         imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full"+ str(image_num) + ".jpg";
         println(imageNames[i]);
@@ -169,7 +176,8 @@ void draw() {
     image(section[whichFrame], 0, 0);
   }
   
-  EdgeVertex[] edges = drawBlobsAndEdges(false, true);
+  //EdgeVertex[] edges = drawBlobsAndEdges(false, true);
+  drawBlobsAndEdges(false, true);
   
   //draws the blob
   image(img, 0, 0);
@@ -204,9 +212,9 @@ void draw() {
     // Run the python code HERE
 
     // Loads in a poem from the text file
-    if(loadStrings("http://esems.pythonanywhere.com/poem1") != null){
-      if ((loadStrings("http://esems.pythonanywhere.com/poem1").length) > 0) {
-        result = loadStrings("http://esems.pythonanywhere.com/poem1");
+    if(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
+      if ((loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length) > 0) {
+        result = loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber);
         println("Loaded result");
         //go through each loaded line and check if there are any special chars to replace
         for(p = 0; p < 3; p++){
@@ -228,7 +236,7 @@ void draw() {
 
     yrand = random(30, 570);
     println("Random Y is", yrand);
-    textSize(50);
+    //textSize(120);
     if(result != null){
       text(result[0] + " / " + result[1] + " / " + result[2], x, yrand);
       x = x-1;
@@ -241,10 +249,10 @@ void draw() {
     // If there is a file, loads in a poem from the text file. Otherwise, states that the file does not exist.
     printArray(new_result);
 
-    if(loadStrings("http://esems.pythonanywhere.com/poem1") != null){
-      if ((loadStrings("http://esems.pythonanywhere.com/poem1").length) > 0) {
-        println(loadStrings("http://esems.pythonanywhere.com/poem1").length);
-        new_result = loadStrings("http://esems.pythonanywhere.com/poem1");
+    if(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
+      if ((loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length) > 0) {
+        println(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length);
+        new_result = loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber);
         println("Loaded new result");
         //go through each loaded line and check if there are any special chars to replace
         if(new_result.length > 0){
@@ -304,24 +312,27 @@ void draw() {
 //videoExport.saveFrame();
 }
 
-EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
+//EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
+void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
 {
   // this section sets the blobs on an img layer
   img.beginDraw();
   img.noFill();
    
-  //10 count in 1 minute? 120 count is approximately 1.5 hours
-  if(counter % 30 == 0 && counter != 0){
+  //10 count in 1 minute? 600 count is approximately 1 hour
+  if(counter % printCount == 0 && counter != 0){
     println("---Counter in the function is ", counter);
     if(pastFrame != whichFrame && randFrame == whichFrame){
       drawPDF = true;
       println("---" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
-      printImage("/Users/suehuang/Documents/Processing/skycam_v6/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
+      if(printImageToggle == true){
+        printImage("/Users/suehuang/Documents/Processing/" + folderLocation + "/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
+      }
       println("---pastFrame in the function is ", pastFrame);
       println("---whichFrame in the function is ", whichFrame);
       println("---randFrame in the function is ", randFrame);
       pastFrame = whichFrame;
-      if(counter > 30){
+      if(counter > printCount){
         num++;
       }
     }
@@ -333,7 +344,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   Blob b;
   EdgeVertex eA, eB;
 
-  EdgeVertex[] edges = new EdgeVertex[2];
+  //EdgeVertex[] edges = new EdgeVertex[2];
   if(theBlobDetection != null){
     println("There is a blob");
     for (int n=0 ; n<theBlobDetection.getBlobNb() ; n++)
@@ -354,7 +365,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           minute = c.get(Calendar.MINUTE);
           second = c.get(Calendar.SECOND);
           
-          textFont(pdf_font);
+          //textFont(pdf_font);
           
           println("---Drawing the cloud...");
           pdf = createGraphics(1024, 600, PDF, "cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
@@ -384,7 +395,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
         }
         // Edges
         if (drawEdges){
-          if(counter % 10 == 0){
+          if(counter % screenDrawCount == 0){
             img.strokeWeight(.01);
             img.stroke(255, 255, 255, 10);
           }else{
@@ -392,9 +403,9 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           }
           for (int m=0;m<b.getEdgeNb();m++){
             eA = b.getEdgeVertexA(m);
-            edges[0] = eA;
+            //edges[0] = eA;
             eB = b.getEdgeVertexB(m);
-            edges[1] = eA;
+            //edges[1] = eA;
             if (eA !=null && eB !=null){
               img.line(
                 eA.x*width, eA.y*height, 
@@ -439,7 +450,7 @@ EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   img.endDraw();
 
 
-  return edges;
+  //return edges;
 }
 
 void printImage(String path) {  
