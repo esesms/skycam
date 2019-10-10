@@ -51,6 +51,7 @@ int currentMillis = 0;
 int pastMillis = 0;
 int timeDifference = 0;
 int randFrame;
+Boolean isOnline;
 
 // for text scroll
 int x = 1024;
@@ -85,7 +86,7 @@ void setup() {
     if (i == 0) {
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
       println(imageNames[i]);
-      if(loadImage(imageNames[i]) != null){
+      if(isOnline() == true && loadImage(imageNames[i]) != null){
         frames[i] = loadImage(imageNames[i]);
         if(frames[i] != null){
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
@@ -99,7 +100,7 @@ void setup() {
       image_num = i + 1;
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full"+ str(image_num) + ".jpg";
       println(imageNames[i]);
-      if(loadImage(imageNames[i]) != null){
+      if(isOnline() == true && loadImage(imageNames[i]) != null){
         frames[i] = loadImage(imageNames[i]);
         if(frames[i] != null){
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image
@@ -143,7 +144,7 @@ void draw() {
       if (i == 0) {
         imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
         println(imageNames[i]);
-        if(loadImage(imageNames[i]) != null){
+        if(isOnline() == true && loadImage(imageNames[i]) != null){
           frames[i] = loadImage(imageNames[i]);
           if(frames[i] != null){
             section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
@@ -157,7 +158,7 @@ void draw() {
         image_num = i + 1;
         imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full"+ str(image_num) + ".jpg";
         println(imageNames[i]);
-        if(loadImage(imageNames[i]) != null){
+        if(isOnline() == true && loadImage(imageNames[i]) != null){
           frames[i] = loadImage(imageNames[i]);
           if(frames[i] != null){
             section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image
@@ -223,7 +224,7 @@ void draw() {
     // Run the python code HERE
 
     // Loads in a poem from the text file
-    if(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
+    if(isOnline() == true && loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
       if ((loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length) > 0) {
         result = loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber);
         println("Loaded result");
@@ -236,9 +237,11 @@ void draw() {
             }
           }
         }
-      } else {
-        println("No length");
+      }else{
+        result = loadStrings("assets/poems.txt");
       }
+    }else{
+        result = loadStrings("assets/poems.txt");
     }
 
     textFont(sky_font);
@@ -260,7 +263,7 @@ void draw() {
     // If there is a file, loads in a poem from the text file. Otherwise, states that the file does not exist.
     printArray(new_result);
 
-    if(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
+    if(isOnline() == true && loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
       if ((loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length) > 0) {
         println(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length);
         new_result = loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber);
@@ -271,14 +274,15 @@ void draw() {
             for(q = 0; q < html_code.length; q++){
               if(new_result[p].contains(html_code[q])){
                 new_result[p] = new_result[p].replace(html_code[q], plain_txt[q]);
-                
               }
             }
           }
         }
-      } else {
-        println("No length");
+      }else{
+        new_result = loadStrings("assets/poems.txt");
       }
+    }else{
+        new_result = loadStrings("assets/poems.txt");
     }
     
     if(new_result.length > 0){
@@ -477,6 +481,21 @@ void printImage(String path) {
   }
 }
 
+public boolean isOnline() {
+  Runtime runtime = Runtime.getRuntime();
+  try {
+    Process ipProcess = runtime.exec("ping " +" -c "+" 1 "+ "http://esesms.pythonanywhere.com");
+    int     exitValue = ipProcess.waitFor();
+    return (exitValue == 0);
+  } 
+  catch (IOException e) { 
+    e.printStackTrace();
+  }
+  catch (InterruptedException e) { 
+    e.printStackTrace();
+  }return false;
+}
+  
 void keyPressed(){
   if(blobThreshold > 0.0 && blobThreshold < 1.0){
     if(key == CODED) {
