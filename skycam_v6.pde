@@ -9,16 +9,16 @@ import java.util.TimeZone;
 //VideoExport videoExport;
 
 //variable inputs
-int city_no = 435;
+int city_no = 510;
 int printCount = 2; // One print per hour
-int screenDrawCount = 100; // One screen draw every 10 minutes
+int screenDrawCount = 2; // One screen draw every 10 minutes
 int poemNumber = 1;
 String folderLocation = "skycam_v6";
 int monitorNumber = 1;
-Boolean printImageToggle = true;
+Boolean printImageToggle = false;
 
 // stuff for loading in the sky images
-String city_name = "New Mexico";
+String city_name = "West Virginia";
 int trail = 6;
 int image_num = 0;
 String[] imageNames = new String[6];
@@ -116,8 +116,8 @@ void setup() {
   //pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
   
   // Screen size
-  //size(1024, 600);
-  fullScreen(monitorNumber);
+  size(1024, 600);
+  //fullScreen(monitorNumber);
   
   // code to export a video
   /*
