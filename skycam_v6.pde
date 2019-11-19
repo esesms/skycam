@@ -9,16 +9,16 @@ import java.util.TimeZone;
 //VideoExport videoExport;
 
 //variable inputs
-int city_no = 510;
-int printCount = 2; // One print per hour
-int screenDrawCount = 2; // One screen draw every 10 minutes
+int city_no = 544;
+int printCount = 600; // One print per hour
+int screenDrawCount = 100; // One screen draw every 10 minutes
 int poemNumber = 1;
 String folderLocation = "skycam_v6";
 int monitorNumber = 1;
 Boolean printImageToggle = false;
 
 // stuff for loading in the sky images
-String city_name = "West Virginia";
+String city_name = "Brazil";
 int trail = 6;
 int image_num = 0;
 String[] imageNames = new String[6];
@@ -86,49 +86,49 @@ void setup() {
     if (i == 0) {
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
       println(imageNames[i]);
-      if(isOnline() == true && loadImage(imageNames[i]) != null){
+      if (isOnline() == true && loadImage(imageNames[i]) != null) {
         frames[i] = loadImage(imageNames[i]);
-        if(frames[i] != null){
+        if (frames[i] != null) {
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
         }
-      }else{
+      } else {
         // in case it is unable to load in an image from online, load one from folder
         frames[i] = loadImage("assets/latest_full.jpg");
         section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
       }
-    }else{
+    } else {
       image_num = i + 1;
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full"+ str(image_num) + ".jpg";
       println(imageNames[i]);
-      if(isOnline() == true && loadImage(imageNames[i]) != null){
+      if (isOnline() == true && loadImage(imageNames[i]) != null) {
         frames[i] = loadImage(imageNames[i]);
-        if(frames[i] != null){
+        if (frames[i] != null) {
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image
         }
-      }else{
+      } else {
         frames[i] = loadImage("assets/latest_full" + str(image_num) + ".jpg");
         section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
       }
     }
   }
-  
+
   img = createGraphics(1024, 600);
   //pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
-  
+
   // Screen size
   size(1024, 600);
   //fullScreen(monitorNumber);
-  
+
   // code to export a video
   /*
   videoExport = new VideoExport(this);
-  videoExport.startMovie();
-  */
+   videoExport.startMovie();
+   */
 
   sky_font = loadFont("AndaleMono-64.vlw");
-  
+
   //pdf_font = loadFont("AndaleMono-6.vlw");
-  
+
   //pdf_font = createFont("Futura", 8);
   //textFont(pdf_font);
 
@@ -137,67 +137,67 @@ void setup() {
 
 void draw() {
   background(255);
-  
+
   // refreshes images in 2 second segment every 1 minutes
-  if((millis())%60000 > 59000 || (millis())%60000 < 1000){
+  if ((millis())%60000 > 59000 || (millis())%60000 < 1000) {
     for (i = 0; i < trail; i = i+1) {
       if (i == 0) {
         imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
         println(imageNames[i]);
-        if(isOnline() == true && loadImage(imageNames[i]) != null){
+        if (isOnline() == true && loadImage(imageNames[i]) != null) {
           frames[i] = loadImage(imageNames[i]);
-          if(frames[i] != null){
+          if (frames[i] != null) {
             section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
           }
-        }else{
+        } else {
           // in case it is unable to load in an image from online, load one from folder
           frames[i] = loadImage("assets/latest_full.jpg");
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
         }
-      }else{
+      } else {
         image_num = i + 1;
         imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full"+ str(image_num) + ".jpg";
         println(imageNames[i]);
-        if(isOnline() == true && loadImage(imageNames[i]) != null){
+        if (isOnline() == true && loadImage(imageNames[i]) != null) {
           frames[i] = loadImage(imageNames[i]);
-          if(frames[i] != null){
+          if (frames[i] != null) {
             section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image
           }
-        }else{
+        } else {
           frames[i] = loadImage("assets/latest_full" + str(image_num) + ".jpg");
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
         }
       }
     }
   }
-  
-  if(section[whichFrame] != null){
+
+  if (section[whichFrame] != null) {
     theBlobDetection = new BlobDetection(section[whichFrame].width, section[whichFrame].height);
     theBlobDetection.setPosDiscrimination(false);
     theBlobDetection.setThreshold(blobThreshold);
     println("---Blob threshold currently set at", nf(blobThreshold, 1, 1));
     theBlobDetection.computeBlobs(section[whichFrame].pixels);
-   
+
     //resizes the image
     //frames[whichFrame].resize(round(768*2.5), round(576*2.5));
-    
+
     section[whichFrame].resize(1024, 600);
     //section[whichFrame].resize(4000, 3000);
-    
+
     //draws the image
     image(section[whichFrame], 0, 0);
   }
-  
+
   //EdgeVertex[] edges = drawBlobsAndEdges(false, true);
   drawBlobsAndEdges(false, true);
-  
+
   //draws the blob
   image(img, 0, 0);
-  
+
   // checks if enough time has passed
   // since we last changed the frame and we
   // need to do it again.
-  
+
   if (millis() > nextTimer) {
     whichFrame = whichFrame + 1;
     println("---whichFrame is " + whichFrame);
@@ -206,7 +206,7 @@ void draw() {
       println("---whichFrame is " + whichFrame);
       counter ++;
       println("---counter is " + counter);
-      randFrame = int(random(0,5));
+      randFrame = int(random(0, 5));
       println("---randFrame is " + randFrame);
       currentMillis = millis();
       timeDifference = currentMillis - pastMillis;
@@ -224,24 +224,24 @@ void draw() {
     // Run the python code HERE
 
     // Loads in a poem from the text file
-    if(isOnline() == true && loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
+    if (isOnline() == true && loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null) {
       if ((loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length) > 0) {
         result = loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber);
         println("Loaded result");
         //go through each loaded line and check if there are any special chars to replace
-        for(p = 0; p < 3; p++){
-          for(q = 0; q < html_code.length; q++){
-            if(result[p].contains(html_code[q])){
+        for (p = 0; p < 3; p++) {
+          for (q = 0; q < html_code.length; q++) {
+            if (result[p].contains(html_code[q])) {
               result[p] = result[p].replace(html_code[q], plain_txt[q]);
               //println("--", new_result[p]);
             }
           }
         }
-      }else{
+      } else {
         result = loadStrings("assets/poems.txt");
       }
-    }else{
-        result = loadStrings("assets/poems.txt");
+    } else {
+      result = loadStrings("assets/poems.txt");
     }
 
     textFont(sky_font);
@@ -251,7 +251,7 @@ void draw() {
     yrand = random(30, 570);
     println("Random Y is", yrand);
     //textSize(120);
-    if(result != null){
+    if (result != null) {
       text(result[0] + " / " + result[1] + " / " + result[2], x, yrand);
       x = x-1;
     }
@@ -263,29 +263,29 @@ void draw() {
     // If there is a file, loads in a poem from the text file. Otherwise, states that the file does not exist.
     printArray(new_result);
 
-    if(isOnline() == true && loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null){
+    if (isOnline() == true && loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber) != null) {
       if ((loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length) > 0) {
         println(loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber).length);
         new_result = loadStrings("http://esems.pythonanywhere.com/poem" + poemNumber);
         println("Loaded new result");
         //go through each loaded line and check if there are any special chars to replace
-        if(new_result.length > 0){
-          for(p = 0; p < 3; p++){
-            for(q = 0; q < html_code.length; q++){
-              if(new_result[p].contains(html_code[q])){
+        if (new_result.length > 0) {
+          for (p = 0; p < 3; p++) {
+            for (q = 0; q < html_code.length; q++) {
+              if (new_result[p].contains(html_code[q])) {
                 new_result[p] = new_result[p].replace(html_code[q], plain_txt[q]);
               }
             }
           }
         }
-      }else{
+      } else {
         new_result = loadStrings("assets/poems.txt");
       }
-    }else{
-        new_result = loadStrings("assets/poems.txt");
+    } else {
+      new_result = loadStrings("assets/poems.txt");
     }
-    
-    if(new_result.length > 0){
+
+    if (new_result.length > 0) {
       // Check if the new poem matches the existing poem in the result array
       ln1_compare = new_result[0].equals(result[0]);
       println("Check 1");
@@ -293,7 +293,7 @@ void draw() {
       println("Check 2");
       ln3_compare = new_result[2].equals(result[2]);
       println("Check 3");
-    
+
 
       // Get text width
       txt_width = textWidth(result[0]);
@@ -313,7 +313,7 @@ void draw() {
         //blendMode(BLEND);
         x = x-1;
       } else {
-  
+
         // Otherwise, replace with the new poem and reset x
         println("Results are not equal or poem has completed scroll");
         arrayCopy(new_result, result);
@@ -323,8 +323,8 @@ void draw() {
       }
     }
   }
-//code to export video
-//videoExport.saveFrame();
+  //code to export video
+  //videoExport.saveFrame();
 }
 
 //EdgeVertex[] drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
@@ -333,44 +333,43 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   // this section sets the blobs on an img layer
   img.beginDraw();
   img.noFill();
-   
+
   //10 count in 1 minute? 600 count is approximately 1 hour
-  if(counter % printCount == 0 && counter != 0){
+  if (counter % printCount == 0 && counter != 0) {
     println("---Counter in the function is ", counter);
-    if(pastFrame != whichFrame && randFrame == whichFrame){
+    if (pastFrame != whichFrame && randFrame == whichFrame) {
       drawPDF = true;
       println("---" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
-      if(printImageToggle == true){
+      if (printImageToggle == true) {
         printImage("/Users/suehuang/Documents/Processing/" + folderLocation + "/cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
       }
       println("---pastFrame in the function is ", pastFrame);
       println("---whichFrame in the function is ", whichFrame);
       println("---randFrame in the function is ", randFrame);
       pastFrame = whichFrame;
-      if(counter > printCount){
+      if (counter > printCount) {
         num++;
       }
     }
-    
-  }else{
+  } else {
     drawPDF = false;
   }
-  
+
   Blob b;
   EdgeVertex eA, eB;
 
   //EdgeVertex[] edges = new EdgeVertex[2];
-  if(theBlobDetection != null){
+  if (theBlobDetection != null) {
     println("There is a blob");
-    for (int n=0 ; n<theBlobDetection.getBlobNb() ; n++)
+    for (int n=0; n<theBlobDetection.getBlobNb(); n++)
     {
       b=theBlobDetection.getBlob(n);
       if (b!=null && b.w*width > 100) // if the blob has a width bigger than 200
       {
         println("There is a big blob");
         // if the blob is bigger than 100 width than, create a pdf to capture it
-        if(drawPDF == true){
-          
+        if (drawPDF == true) {
+
           //get the calendar info
           c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
           year = c.get(Calendar.YEAR);
@@ -379,54 +378,54 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           hour = c.get(Calendar.HOUR_OF_DAY);
           minute = c.get(Calendar.MINUTE);
           second = c.get(Calendar.SECOND);
-          
+
           //textFont(pdf_font);
-          
+
           println("---Drawing the cloud...");
           pdf = createGraphics(1024, 600, PDF, "cloudprints/" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG.pdf");
-          
- 
-          
+
+
+
           pdf.beginDraw();
-          
+
           //text on PDF
           pdf.fill(0);
-          
+
           pdf.pushMatrix();
           //vertical text
           /*
           pdf.translate(974, 300);
-          pdf.rotate(-HALF_PI);
-          */
+           pdf.rotate(-HALF_PI);
+           */
           pdf.translate(799, 570);
           pdf.textSize(6);
           pdf.text("IN_THE_TIME_OF_CLOUDS-" + city_no + nf(year) + nf(month, 2) +nf(day, 2) + nf(hour, 2) + nf(minute, 2) + nf(second, 2) + "-SUE_HUANG", 0, 0);
           pdf.popMatrix();
-          
-          
+
+
           pdf.noFill();
           pdf.strokeWeight(1);
           pdf.stroke(0, 0, 0);
         }
         // Edges
-        if (drawEdges){
-          if(counter % screenDrawCount == 0){
+        if (drawEdges) {
+          if (counter % screenDrawCount == 0) {
             img.strokeWeight(.01);
             img.stroke(255, 255, 255, 10);
-          }else{
+          } else {
             img.noStroke();
           }
-          for (int m=0;m<b.getEdgeNb();m++){
+          for (int m=0; m<b.getEdgeNb(); m++) {
             eA = b.getEdgeVertexA(m);
             //edges[0] = eA;
             eB = b.getEdgeVertexB(m);
             //edges[1] = eA;
-            if (eA !=null && eB !=null){
+            if (eA !=null && eB !=null) {
               img.line(
                 eA.x*width, eA.y*height, 
                 eB.x*width, eB.y*height
                 );
-              if(drawPDF == true){
+              if (drawPDF == true) {
                 pdf.line(
                   eA.x*width, eA.y*height, 
                   eB.x*width, eB.y*height
@@ -436,7 +435,7 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           }
         }
 
-        
+
         // Blobs
         if (drawBlobs)
         {
@@ -446,20 +445,17 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
           img.rect(
             b.xMin*width, b.yMin*height, 
             b.w*width, b.h*height
-           );   
+            );
         }
-        if(drawPDF == true) {
-          
+        if (drawPDF == true) {
+
           pdf.dispose();
           pdf.endDraw();
-          
         }
       }
     }
     drawPDF = false;
-    
-    
-  }else{
+  } else {
     println("There is no blob");
   }
   img.endDraw();
@@ -493,43 +489,47 @@ public boolean isOnline() {
   }
   catch (InterruptedException e) { 
     e.printStackTrace();
-  }return false;
+  }
+  return false;
 }
-  
-void keyPressed(){
-  if(blobThreshold > 0.0 && blobThreshold < 1.0){
-    if(key == CODED) {
-      if(keyCode == UP) {
+
+void keyPressed() {
+  if (keyCode==ENTER) { 
+    saveFrame("./screen_captures/screen-####.tif");
+  }
+  if (blobThreshold > 0.0 && blobThreshold < 1.0) {
+    if (key == CODED) {
+      if (keyCode == UP) {
         blobThreshold = blobThreshold + 0.1;
-      }else if(keyCode == DOWN){
+      } else if (keyCode == DOWN) {
         blobThreshold = blobThreshold - 0.1;
       }
     }
-  }else if(blobThreshold >= 1.0){
-    if(key == CODED) {
-      if(keyCode == UP) {
+  } else if (blobThreshold >= 1.0) {
+    if (key == CODED) {
+      if (keyCode == UP) {
         blobThreshold = 1.0;
-      }else if(keyCode == DOWN){
+      } else if (keyCode == DOWN) {
         blobThreshold = blobThreshold - 0.1;
       }
     }
-  }else if(blobThreshold <= 0.0){
-    if(key == CODED) {
-      if(keyCode == UP) {
+  } else if (blobThreshold <= 0.0) {
+    if (key == CODED) {
+      if (keyCode == UP) {
         blobThreshold = blobThreshold + 0.1;
-      }else if(keyCode == DOWN){
+      } else if (keyCode == DOWN) {
         blobThreshold = 0.0;
       }
     }
   }
   println("---Key code is", keyCode); 
   println("---Blob threshold changed to", nf(blobThreshold, 1, 1)); 
-  
+
   // code to export video
   /*
   if (key == 'q') {
-    videoExport.endMovie();
-    exit();
-  }
-  */
+   videoExport.endMovie();
+   exit();
+   }
+   */
 }
