@@ -1,6 +1,5 @@
-// This is a final version of the file
-// Test change
-// libraries for detecting blobs and printing them out
+// In the Time of Clouds v6
+
 import blobDetection.*;
 import processing.pdf.*;
 import java.util.Calendar;
@@ -9,17 +8,17 @@ import java.util.TimeZone;
 //VideoExport videoExport;
 
 //variable inputs
-int city_no = 519;
+int city_no = 391;
 int printCount = 600; // One print per hour
 int screenDrawCount = 100; // One screen draw every 10 minutes
 int poemNumber = 1;
 String folderLocation = "skycam_v6";
 int monitorNumber = 1;
 Boolean printImageToggle = false;
-Boolean fullScreenToggle = false;
+Boolean fullScreenToggle = true;
 
 // stuff for loading in the sky images
-String city_name = "Brazil";
+String city_name = "Warrensburg, Missouri";
 int trail = 6;
 int image_num = 0;
 String[] imageNames = new String[6];
@@ -81,8 +80,17 @@ int j = 0;
 int p = 0;
 int q = 0;
 
+void settings(){
+  // Screen size
+  if(fullScreenToggle == false){
+    size(1024, 600);
+  }else if(fullScreenToggle == true){
+    fullScreen(monitorNumber);
+  }
+}
+
 void setup() {
-  // Load image from a web server
+// Load image from a web server
   for (i = 0; i < trail; i = i+1) {
     if (i == 0) {
       imageNames[i] = "http://www.allskycam.com/u/" + str(city_no) + "/latest_full.jpg";
@@ -117,13 +125,6 @@ void setup() {
 
   img = createGraphics(1024, 600);
   //pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
-
-  // Screen size
-  if(fullScreenToggle == false){
-    size(1024, 600);
-  }else if(fullScreenToggle == true){
-    fullScreen(monitorNumber);
-  }
 
   // code to export a video
   /*
