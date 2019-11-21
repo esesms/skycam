@@ -95,6 +95,7 @@ void setup() {
         // in case it is unable to load in an image from online, load one from folder
         frames[i] = loadImage("assets/latest_full.jpg");
         section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
+        println("Displaying alternate image");
       }
     } else {
       image_num = i + 1;
@@ -153,6 +154,7 @@ void draw() {
           // in case it is unable to load in an image from online, load one from folder
           frames[i] = loadImage("assets/latest_full.jpg");
           section[i] = frames[i].get(sectionx, sectiony, int(1024/m), int(600/m)); // crop the image // decrease the width and height if i want to crop more
+          println("Displaying alternate image");
         }
       } else {
         image_num = i + 1;
