@@ -9,8 +9,8 @@ import java.util.TimeZone;
 
 //variable inputs
 int city_no = 391;
-int printCount = 600; // One print per hour
-int screenDrawCount = 100; // One screen draw every 10 minutes
+int printCount = 288; // 288 count = 1 print per hour
+int screenDrawCount = 40;
 int poemNumber = 1;
 String folderLocation = "skycam_v6";
 int monitorNumber = 1;
