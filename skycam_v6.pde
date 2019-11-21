@@ -9,7 +9,7 @@ import java.util.TimeZone;
 //VideoExport videoExport;
 
 //variable inputs
-int city_no = 544;
+int city_no = 519;
 int printCount = 600; // One print per hour
 int screenDrawCount = 100; // One screen draw every 10 minutes
 int poemNumber = 1;
