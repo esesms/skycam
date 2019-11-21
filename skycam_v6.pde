@@ -16,6 +16,7 @@ int poemNumber = 1;
 String folderLocation = "skycam_v6";
 int monitorNumber = 1;
 Boolean printImageToggle = false;
+Boolean fullScreenToggle = false;
 
 // stuff for loading in the sky images
 String city_name = "Brazil";
@@ -118,8 +119,11 @@ void setup() {
   //pdf = createGraphics(1024, 600, PDF, "cloudprints/output"+ num + ".pdf");
 
   // Screen size
-  size(1024, 600);
-  //fullScreen(monitorNumber);
+  if(fullScreenToggle == false){
+    size(1024, 600);
+  }else if(fullScreenToggle == true){
+    fullScreen(monitorNumber);
+  }
 
   // code to export a video
   /*
